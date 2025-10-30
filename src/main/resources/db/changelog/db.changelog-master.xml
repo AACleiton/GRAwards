@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+           http://www.liquibase.org/xml/ns/dbchangelog
+           http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd">
+
+    <changeSet id="20251029205200" author="Cleiton">
+        <createSequence sequenceName="movie_id_seq" incrementBy="1" startValue="1" />
+
+        <createTable tableName="movie">
+            <column name="id" type="bigint" defaultValueComputed="nextval('movie_id_seq')">
+                <constraints nullable="false" />
+            </column>
+            <column name="release_year" type="int"/>
+            <column name="title" type="varchar(255)"/>
+            <column name="studios" type="varchar(255)"/>
+            <column name="producers" type="varchar(255)"/>
+            <column name="winner" type="boolean"/>
+        </createTable>
+
+        <addPrimaryKey tableName="movie" columnNames="id" constraintName="movie_pk"/>
+    </changeSet>
+</databaseChangeLog>
