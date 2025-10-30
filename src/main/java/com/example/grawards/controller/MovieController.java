@@ -1,9 +1,13 @@
 package com.example.grawards.controller;
 
+import com.example.grawards.DTO.PageableDTO;
 import com.example.grawards.VO.MovieVO;
+import com.example.grawards.VO.ReportVO;
 import com.example.grawards.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.AbstractPageRequest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,12 +31,12 @@ public class MovieController {
     }
 
     @GetMapping(path = "/all")
-    public Page<MovieVO> getAllMovies(@RequestBody Pageable pageable) {
-        return movieService.getAllMovies(pageable);
+    public Page<MovieVO> getAllMovies(@RequestBody PageableDTO pageable) {
+        return movieService.getAllMovies(pageable.toPageable());
     }
 
     @GetMapping(path = "/report")
-    public String getReport() {
+    public ReportVO getReport() {
         return movieService.getReport();
     }
 
