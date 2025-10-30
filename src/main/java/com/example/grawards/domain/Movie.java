@@ -4,12 +4,15 @@ import jakarta.persistence.*;
 
 import java.util.Objects;
 
+import static java.util.Optional.ofNullable;
+
 @Entity
 @Table(name = "movie")
 public class Movie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "release_year")
@@ -64,7 +67,7 @@ public class Movie {
     }
 
     public Boolean getWinner() {
-        return winner;
+        return ofNullable(winner).orElse(false);
     }
 
     public void setWinner(Boolean winner) {
