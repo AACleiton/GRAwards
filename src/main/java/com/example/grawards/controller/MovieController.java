@@ -22,7 +22,7 @@ public class MovieController {
     }
 
     @PostMapping(path = "/import")
-    public void importMovies(@RequestPart MultipartFile movies) {
+    public void importMovies(@RequestPart(name = "movies") MultipartFile movies) {
         movieService.importMovies(movies);
     }
 

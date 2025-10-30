@@ -34,6 +34,7 @@ public class MovieService {
             var moviesPersist = new CsvToBeanBuilder<Movie>(reader)
                     .withType(Movie.class)
                     .withIgnoreLeadingWhiteSpace(true)
+                    .withSeparator(';')
                     .build()
                     .parse();
 
