@@ -39,7 +39,8 @@ public class MovieService {
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void init() {
         try {
-            var reader = Files.newBufferedReader(Paths.get("src/main/resources/data/Movielist.csv"));
+            var inputStream = getClass().getClassLoader().getResourceAsStream("data/Movielist.csv");
+            var reader = new InputStreamReader(inputStream);
 
             var moviesDTO = new CsvToBeanBuilder<MovieDTO>(reader)
                     .withType(MovieDTO.class)
@@ -52,7 +53,7 @@ public class MovieService {
 
             movieRepository.saveAll(moviesPersist);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao importar os filmes", e);
+            System.out.println("Não foi possivel carregar os filmes!");
         }
     }
 
