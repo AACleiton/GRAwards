@@ -1,5 +1,6 @@
 package com.example.grawards.domain;
 
+import com.example.grawards.DTO.MovieDTO;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -29,6 +30,18 @@ public class Movie {
 
     @Column(name = "winner")
     private Boolean winner;
+
+    public Movie() {
+    }
+
+    public Movie(MovieDTO movieDTO) {
+        this.id = movieDTO.getId();
+        this.year = movieDTO.getYear();
+        this.title = movieDTO.getTitle();
+        this.studios = movieDTO.getStudios();
+        this.producers = movieDTO.getProducers();
+        this.winner = movieDTO.getWinner();
+    }
 
     public Long getId() {
         return id;
