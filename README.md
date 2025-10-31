@@ -1,6 +1,3 @@
-Perfeito 👌 — aqui está o **README.md completo e personalizado** para o teu projeto **GRAwards**, já formatado e pronto pra colocar na raiz do repositório.
-
----
 
 ```markdown
 # 🏆 GRAwards
