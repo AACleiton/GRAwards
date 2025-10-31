@@ -53,6 +53,9 @@ Porém foi implementado um metodo caso seja necessario informar mais arquivos, a
 ````
 Lembrando que o arquivo precisa seguir o mesmo padrao de dados no arquivo base.
 
+---
+Na pasta examples, possui um arquivo com o cUrl necessario para executar o processo pedido.
+
 📦 Dependência usada: [OpenCSV](http://opencsv.sourceforge.net/)
 
 ```xml
