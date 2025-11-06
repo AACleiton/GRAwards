@@ -109,28 +109,25 @@ public class MovieService {
             currentMinInterval = isNull(currentMinInterval) ? interval : currentMinInterval;
             currentMaxInterval = isNull(currentMaxInterval) ? interval : currentMaxInterval;
 
-            if (interval == currentMinInterval) {
-                mins.add(new ReportElementVO(reportQueryVO.getProducers(), interval, reportQueryVO.getMinYear(), reportQueryVO.getMaxYear()));
-            }
+            currentMinInterval = getNewCurrentValueAndUpdateElements(currentMinInterval, mins, reportQueryVO, interval, interval < currentMinInterval);
 
-            if (interval < currentMinInterval) {
-                mins.clear();
-                mins.add(new ReportElementVO(reportQueryVO.getProducers(), interval, reportQueryVO.getMinYear(), reportQueryVO.getMaxYear()));
-                currentMinInterval = interval;
-            }
-
-            if (interval == currentMaxInterval) {
-                maxs.add(new ReportElementVO(reportQueryVO.getProducers(), interval, reportQueryVO.getMinYear(), reportQueryVO.getMaxYear()));
-            }
-
-            if (interval > currentMaxInterval) {
-                maxs.clear();
-                maxs.add(new ReportElementVO(reportQueryVO.getProducers(), interval, reportQueryVO.getMinYear(), reportQueryVO.getMaxYear()));
-                currentMaxInterval = interval;
-            }
+            currentMaxInterval = getNewCurrentValueAndUpdateElements(currentMaxInterval, maxs, reportQueryVO, interval, interval > currentMaxInterval);
         }
 
         return new ReportVO(mins, maxs);
+    }
+
+    private Integer getNewCurrentValueAndUpdateElements(Integer currentInterval, ArrayList<ReportElementVO> elementVOS, ReportQueryVO reportQueryVO, int interval, boolean updateCurrentInterval) {
+        if (interval == currentInterval) {
+            elementVOS.add(new ReportElementVO(reportQueryVO.getProducers(), interval, reportQueryVO.getMinYear(), reportQueryVO.getMaxYear()));
+        }
+
+        if (updateCurrentInterval) {
+            elementVOS.clear();
+            elementVOS.add(new ReportElementVO(reportQueryVO.getProducers(), interval, reportQueryVO.getMinYear(), reportQueryVO.getMaxYear()));
+            currentInterval = interval;
+        }
+        return currentInterval;
     }
 
     private List<String> getAllProducers(String producers) {
