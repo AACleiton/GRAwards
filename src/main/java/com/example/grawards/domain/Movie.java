@@ -34,12 +34,12 @@ public class Movie {
     public Movie() {
     }
 
-    public Movie(MovieDTO movieDTO) {
+    public Movie(MovieDTO movieDTO, String producer) {
         this.id = movieDTO.getId();
         this.year = movieDTO.getYear();
         this.title = movieDTO.getTitle();
         this.studios = movieDTO.getStudios();
-        this.producers = movieDTO.getProducers();
+        this.producers = producer;
         this.winner = movieDTO.getWinner();
     }
 

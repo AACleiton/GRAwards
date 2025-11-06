@@ -18,12 +18,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
 
 @Service
 public class MovieService {
@@ -40,6 +42,11 @@ public class MovieService {
     public void init() {
         try {
             var inputStream = getClass().getClassLoader().getResourceAsStream("data/Movielist.csv");
+
+            if (inputStream == null) {
+                throw new RuntimeException("Arquivo Movielist.csv nao encontrado!");
+            }
+
             var reader = new InputStreamReader(inputStream);
 
             var moviesDTO = new CsvToBeanBuilder<MovieDTO>(reader)
@@ -49,11 +56,19 @@ public class MovieService {
                     .build()
                     .parse();
 
-            var moviesPersist = moviesDTO.stream().map(Movie::new).toList();
+            ArrayList<Movie> moviesPersist = new ArrayList<>();
+
+            for(MovieDTO movieDTO : moviesDTO) {
+                var producers = this.getAllProducers(movieDTO.getProducers());
+
+                for (String producer : producers) {
+                    moviesPersist.add(new Movie(movieDTO, producer));
+                }
+            }
 
             movieRepository.saveAll(moviesPersist);
         } catch (Exception e) {
-            System.out.println("Não foi possivel carregar os filmes!");
+            throw new RuntimeException("Não foi possivel carregar os filmes!");
         }
     }
 
@@ -119,7 +134,7 @@ public class MovieService {
                     var minYear = moviesEntry.stream().min(Comparator.comparingInt(Movie::getYear)).map(Movie::getYear);
                     var maxYear = moviesEntry.stream().max(Comparator.comparingInt(Movie::getYear)).map(Movie::getYear);
 
-                    if(minYear.isEmpty() || maxYear.isEmpty()){
+                    if (minYear.isEmpty() || maxYear.isEmpty()) {
                         return null;
                     }
 
@@ -130,5 +145,35 @@ public class MovieService {
                 })
                 .filter(Objects::nonNull)
                 .toList();
+    }
+
+    private List<String> getAllProducers(String producers) {
+        var producersFormatted = producers.replaceAll(" and ", ", ");
+        var producersList = new ArrayList<String>();
+
+        if(producersFormatted.contains(",")) {
+
+            this.getProducersRegex(producersFormatted, producersList, "([^,]+)(?=,)");
+            this.getProducersRegex(producersFormatted, producersList, "(?<=,)[^,]*$");
+
+
+        } else {
+            producersList.add(producers);
+        }
+
+        return producersList;
+    }
+
+    private void getProducersRegex(String producersFormatted, List<String> producersList, String regex) {
+        var regexCompiled = Pattern.compile(regex);
+        var results = regexCompiled.matcher(producersFormatted);
+
+        while (results.find()) {
+            var result = results.group();
+
+            if(nonNull(result) && !result.trim().isBlank()) {
+                producersList.add(result.trim());
+            }
+        }
     }
 }
