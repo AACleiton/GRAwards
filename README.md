@@ -136,3 +136,12 @@ Acesse:
 * Console H2: [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
 
 ---
+Executar todos os testes (unitários + integração)
+
+```bash
+./mvnw test
+```
+ou:
+```bash
+mvn test
+```
